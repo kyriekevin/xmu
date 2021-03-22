@@ -3,8 +3,11 @@
 ## 环境变量
 
 QR_code requirement:
+
 python 3.7
+
 numpy 1.19.1
+
 opencv-python 4.4.0.44
 
 ## 编码方式
