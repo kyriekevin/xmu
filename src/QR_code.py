@@ -7,20 +7,18 @@
 import cv2
 import numpy as np
 
-newImg = (620, 620, 3)
-dst = np.zeros(newImg, np.uint8)
-dst.fill(255)
-idx = 0
+# 编码
+def encode(str):
+    return ' '.join([bin(ord(ch)).replace('0b', '') for ch in str])
 
+# 解码
+def decode(str):
+    return ''.join([chr(i) for i in [int(b, 2) for b in str.split(' ')]])
+
+# 读取文件信息
 def get_data():
     binfile = open('text.txt', "r")
     data = binfile.read()
-
-    def encode(str):
-        return ' '.join([bin(ord(ch)).replace('0b', '') for ch in str])
-
-    def decode(str):
-        return ''.join([chr(i) for i in [int(b, 2) for b in str.split(' ')]])
 
     data = encode(data)
     cur = ''
@@ -49,37 +47,38 @@ def get_data():
     return Data
 
 def init():
-    cv2.line(dst, (100, 100), (100, 510), (0, 0, 1))
-    cv2.line(dst, (100, 100), (510, 100), (0, 0, 1))
-    cv2.line(dst, (510, 100), (510, 510), (0, 0, 1))
-    cv2.line(dst, (100, 510), (510, 510), (0, 0, 1))
-
-    cv2.line(dst, (180, 100), (180, 510), (0, 0, 1))
-    cv2.line(dst, (100, 180), (510, 180), (0, 0, 1))
-
-    cv2.line(dst, (430, 100), (430, 510), (0, 0, 1))
-    cv2.line(dst, (100, 430), (510, 430), (0, 0, 1))
-
-    cv2.line(dst, (230, 180), (230, 430), (0, 0, 1))
-    cv2.line(dst, (280, 180), (280, 430), (0, 0, 1))
-    cv2.line(dst, (330, 180), (330, 430), (0, 0, 1))
-    cv2.line(dst, (380, 180), (380, 430), (0, 0, 1))
-
-    cv2.line(dst, (100, 230), (510, 230), (0, 0, 1))
-    cv2.line(dst, (100, 280), (510, 280), (0, 0, 1))
-    cv2.line(dst, (100, 330), (510, 330), (0, 0, 1))
-    cv2.line(dst, (100, 380), (510, 380), (0, 0, 1))
-
-    cv2.line(dst, (230, 100), (230, 510), (0, 0, 1))
-    cv2.line(dst, (280, 100), (280, 510), (0, 0, 1))
-    cv2.line(dst, (330, 100), (330, 510), (0, 0, 1))
-    cv2.line(dst, (380, 100), (380, 510), (0, 0, 1))
-
-    cv2.line(dst, (180, 140), (430, 140), (0, 0, 1))
-    cv2.line(dst, (180, 470), (430, 470), (0, 0, 1))
-
-    cv2.line(dst, (140, 180), (140, 430), (0, 0, 1))
-    cv2.line(dst, (470, 180), (470, 430), (0, 0, 1))
+    # 前期辅助线
+    # cv2.line(dst, (100, 100), (100, 510), (0, 0, 1))
+    # cv2.line(dst, (100, 100), (510, 100), (0, 0, 1))
+    # cv2.line(dst, (510, 100), (510, 510), (0, 0, 1))
+    # cv2.line(dst, (100, 510), (510, 510), (0, 0, 1))
+    #
+    # cv2.line(dst, (180, 100), (180, 510), (0, 0, 1))
+    # cv2.line(dst, (100, 180), (510, 180), (0, 0, 1))
+    #
+    # cv2.line(dst, (430, 100), (430, 510), (0, 0, 1))
+    # cv2.line(dst, (100, 430), (510, 430), (0, 0, 1))
+    #
+    # cv2.line(dst, (230, 180), (230, 430), (0, 0, 1))
+    # cv2.line(dst, (280, 180), (280, 430), (0, 0, 1))
+    # cv2.line(dst, (330, 180), (330, 430), (0, 0, 1))
+    # cv2.line(dst, (380, 180), (380, 430), (0, 0, 1))
+    #
+    # cv2.line(dst, (100, 230), (510, 230), (0, 0, 1))
+    # cv2.line(dst, (100, 280), (510, 280), (0, 0, 1))
+    # cv2.line(dst, (100, 330), (510, 330), (0, 0, 1))
+    # cv2.line(dst, (100, 380), (510, 380), (0, 0, 1))
+    #
+    # cv2.line(dst, (230, 100), (230, 510), (0, 0, 1))
+    # cv2.line(dst, (280, 100), (280, 510), (0, 0, 1))
+    # cv2.line(dst, (330, 100), (330, 510), (0, 0, 1))
+    # cv2.line(dst, (380, 100), (380, 510), (0, 0, 1))
+    #
+    # cv2.line(dst, (180, 140), (430, 140), (0, 0, 1))
+    # cv2.line(dst, (180, 470), (430, 470), (0, 0, 1))
+    #
+    # cv2.line(dst, (140, 180), (140, 430), (0, 0, 1))
+    # cv2.line(dst, (470, 180), (470, 430), (0, 0, 1))
 
     # 左上定位码
     cv2.rectangle(dst, (100, 100), (170, 170), (0, 0, 1), -1)
@@ -193,15 +192,38 @@ def Draw55(data, x, y):
             draw55(str, y + 50 * i, x + 50 * j)
             idx += 1
 
+def get_id():
+    num = int(input("请输入当前二维码编号:"))
+    temp = []
+    id = ""
+    while num:
+        temp.append(num % 2)
+        num //= 2
+    while temp:
+        id += str(temp.pop())
+
+    return id
+
+def Drawenv(id):
+    pass
+
 def Draw():
     str = get_data()
+    id = get_id()
+    print(id)
     Draw45(str, 180, 100)
     Draw45(str, 180, 430)
     Draw54(str, 100, 180)
     Draw54(str, 430, 180)
     Draw55(str, 180, 180)
-init()
-cv2.imshow('test0', dst)
+    Drawenv(id)
+    init()
 
-cv2.waitKey(0)
-
+if __name__ == "__main__":
+    newImg = (620, 620, 3)
+    dst = np.zeros(newImg, np.uint8)
+    dst.fill(255)
+    idx = 0
+    Draw()
+    cv2.imshow('test0', dst)
+    cv2.waitKey(0)
