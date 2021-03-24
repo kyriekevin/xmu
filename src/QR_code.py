@@ -130,11 +130,15 @@ def draw33(str, x, y):
     if flagr:
         for i in range(3):
             if row[i] % 2:
+                continue
+            else:
                 cv2.rectangle(dst, (y + 30, x + 10 * i), (y + 50, x + 10 + 10 * i), (0, 0, 1), -1)
 
     if flagc:
         for i in range(3):
             if col[i] % 2:
+                continue
+            else:
                 cv2.rectangle(dst, (y + 10 * i, x + 30), (y + 10 + 10 * i, x + 50), (0, 0, 1), -1)
 
 # 绘制4x5模块
