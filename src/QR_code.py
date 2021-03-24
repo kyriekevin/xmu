@@ -6,6 +6,8 @@
 
 import cv2
 import numpy as np
+import random
+import string
 
 # 编码
 def encode(str):
@@ -15,11 +17,18 @@ def encode(str):
 def decode(str):
     return ''.join([chr(i) for i in [int(b, 2) for b in str.split(' ')]])
 
-# 读取文件信息
-def get_data():
-    binfile = open('text.txt', "r")
-    data = binfile.read()
+# 随机字符生成
+def ranstr(filename, num):
+    file = open(filename, "w")
+    str = ''.join(random.sample(string.ascii_letters + string.digits, num))
+    file.write(str)
+    file.close()
 
+# 读取文件信息
+def get_data(filename):
+    ranstr(filename, 200)
+    binfile = open(filename, "r")
+    data = binfile.read()
     data = encode(data)
     cur = ''
     last = ''
@@ -99,6 +108,32 @@ def init():
     cv2.rectangle(dst, (430, 430), (480, 480), (0, 0, 1), -1)
     cv2.rectangle(dst, (440, 440), (470, 470), (255, 255, 255), -1)
     cv2.rectangle(dst, (450, 450), (460, 460), (0, 0, 1), -1)
+
+def draw33(str, x, y):
+    row, col = [0, 0, 0], [0, 0, 0]
+    flagr, flagc = False, False
+    if x > y:
+        flagr = True
+    elif x < y:
+        flagc = True
+    for i in range(3):
+        for j in range(3):
+            if str[i * 3 + j] == '0':
+                continue
+            else:
+                cv2.rectangle(dst, (y + 10 * j, x + 10 * i), (y + 10 * (j + 1), x + 10 + 10 * i), (0, 0, 1), -1)
+                col[j] += 1
+                row[i] += 1
+
+    if flagr:
+        for i in range(3):
+            if row[i] % 2:
+                cv2.rectangle(dst, (y + 30, x + 10 * i), (y + 50, x + 10 + 10 * i), (0, 0, 1), -1)
+
+    if flagc:
+        for i in range(3):
+            if col[i] % 2:
+                cv2.rectangle(dst, (y + 10 * i, x + 30), (y + 10 + 10 * i, x + 50), (0, 0, 1), -1)
 
 def draw45(str, x, y):
     for line in range(4):
@@ -204,16 +239,16 @@ def get_id():
         num //= 2
     while temp:
         id += str(temp.pop())
-
+    while len(id) < 9:
+        id = '0' + id
     return id
 
 def Drawenv(id):
-    pass
+    draw33(id, 430, 480)
+    draw33(id, 480, 430)
+    draw33(id, 480, 480)
 
 def Draw():
-    str = get_data()
-    id = get_id()
-    print(id)
     Draw45(str, 180, 100)
     Draw45(str, 180, 430)
     Draw54(str, 100, 180)
@@ -227,6 +262,8 @@ if __name__ == "__main__":
     dst = np.zeros(newImg, np.uint8)
     dst.fill(255)
     idx = 0
+    str = get_data()
+    id = get_id()
     Draw()
     cv2.imshow('test0', dst)
     cv2.waitKey(0)
