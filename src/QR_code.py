@@ -194,8 +194,11 @@ def Draw55(data, x, y):
 
 def get_id():
     num = int(input("请输入当前二维码编号:"))
-    temp = []
     id = ""
+    if num == 0:
+        id = '0'
+        return id
+    temp = []
     while num:
         temp.append(num % 2)
         num //= 2
