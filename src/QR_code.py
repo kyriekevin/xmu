@@ -18,16 +18,18 @@ def decode(str):
     return ''.join([chr(i) for i in [int(b, 2) for b in str.split(' ')]])
 
 # 随机字符生成
-def ranstr(filename, num):
-    file = open(filename, "w")
-    str = ''.join(random.sample(string.ascii_letters + string.digits, num))
+def ranstr(num):
+    file = open("text.txt", "w")
+    str = ""
+    for i in range(10):
+        str += ''.join(random.sample(string.ascii_letters + string.digits, num))
     file.write(str)
     file.close()
 
 # 读取文件信息
-def get_data(filename):
-    ranstr(filename, 200)
-    binfile = open(filename, "r")
+def get_data():
+    ranstr(62)
+    binfile = open("text.txt", "r")
     data = binfile.read()
     data = encode(data)
     cur = ''
@@ -47,14 +49,13 @@ def get_data(filename):
             cnt += 1
         else:
             cur += i
-    while len(cur) < 8:
-        cur = '0' + cur
     while len(cur) < 16:
         cur += '0'
     Data.append(cur)
     binfile.close()
     return Data
 
+# 初始化定位码
 def init():
     # 前期辅助线
     # cv2.line(dst, (100, 100), (100, 510), (0, 0, 1))
@@ -109,6 +110,7 @@ def init():
     cv2.rectangle(dst, (440, 440), (470, 470), (255, 255, 255), -1)
     cv2.rectangle(dst, (450, 450), (460, 460), (0, 0, 1), -1)
 
+# 绘制3x3模块
 def draw33(str, x, y):
     row, col = [0, 0, 0], [0, 0, 0]
     flagr, flagc = False, False
@@ -135,6 +137,7 @@ def draw33(str, x, y):
             if col[i] % 2:
                 cv2.rectangle(dst, (y + 10 * i, x + 30), (y + 10 + 10 * i, x + 50), (0, 0, 1), -1)
 
+# 绘制4x5模块
 def draw45(str, x, y):
     for line in range(4):
         cnt = 0
@@ -153,6 +156,7 @@ def draw45(str, x, y):
                     cv2.rectangle(dst, (y + 10 * i, x + 10 * line), (y + 10 * (i + 1), x + 10 + 10 * line), (0, 0, 1),
                                   -1)
 
+# 绘制5x5模块
 def draw55(str, x, y):
     col = [0, 0, 0, 0, 0]
     for line in range(5):
@@ -183,6 +187,7 @@ def draw55(str, x, y):
                                   -1)
                     col[i] += 1
 
+# 绘制5x4模块
 def draw54(str, x, y):
     col = [0, 0, 0, 0]
     for line in range(5):
@@ -200,6 +205,7 @@ def draw54(str, x, y):
                     cv2.rectangle(dst, (y + 10 * i, x + 10 * line), (y + 10 * (i + 1), x + 10 + 10 * line), (0, 0, 1),
                                   -1)
 
+# 绘制4x5模块组
 def Draw45(data, x, y):
     global idx
 
@@ -209,6 +215,7 @@ def Draw45(data, x, y):
             draw45(str, y + 40 * i, x + 50 * j)
             idx += 1
 
+# 绘制5x4模块组
 def Draw54(data, x, y):
     global idx
 
@@ -218,6 +225,7 @@ def Draw54(data, x, y):
             draw54(str, y + 50 * i, x + 40 * j)
             idx += 1
 
+# 绘制5x5模块组
 def Draw55(data, x, y):
     global idx
 
@@ -227,6 +235,7 @@ def Draw55(data, x, y):
             draw55(str, y + 50 * i, x + 50 * j)
             idx += 1
 
+# 获取当前二维码编号
 def get_id():
     num = int(input("请输入当前二维码编号:"))
     id = ""
@@ -243,17 +252,20 @@ def get_id():
         id = '0' + id
     return id
 
+# 绘制版本模块
 def Drawenv(id):
     draw33(id, 430, 480)
     draw33(id, 480, 430)
     draw33(id, 480, 480)
 
+# 绘制二维码
 def Draw():
     Draw45(str, 180, 100)
-    Draw45(str, 180, 430)
     Draw54(str, 100, 180)
-    Draw54(str, 430, 180)
     Draw55(str, 180, 180)
+    Draw54(str, 430, 180)
+    Draw45(str, 180, 430)
+
     Drawenv(id)
     init()
 
@@ -262,8 +274,8 @@ if __name__ == "__main__":
     dst = np.zeros(newImg, np.uint8)
     dst.fill(255)
     idx = 0
-    str = get_data()
     id = get_id()
+    str = get_data()
     Draw()
     cv2.imshow('test0', dst)
     cv2.waitKey(0)
