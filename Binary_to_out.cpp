@@ -1,4 +1,4 @@
-#include<fstream>
+#include <fstream>
 #include <iostream>
 using namespace std;
 double aa[42][42];
