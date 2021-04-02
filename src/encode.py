@@ -106,7 +106,7 @@ class QR_code:
                         if data[idx] == '1':
                             c[i] = 1
                         idx += 1
-                    cv2.rectangle(dst, (x, y), (x + 10, y + 10), (0 + 255 * c[0], 0 + 255 * c[1], 0 + 255 * c[2]), -1)
+                    cv2.rectangle(dst, (y, x), (y + 10, x + 10), (0 + 255 * c[0], 0 + 255 * c[1], 0 + 255 * c[2]), -1)
                     # if data[idx] == "1":
                     #     cv2.rectangle(dst, (x, y), (x + 10, y + 10), (0, 0, 1), -1)
                     # idx += 1
@@ -198,4 +198,4 @@ class QR_code:
             data = self.process_data(data)
             self.draw(data)
             file_img = cur_dir + "/outputimg/" + 'code' + str(i) + '.jpg'
-            cv2.imwrite(file_name, dst)
+            cv2.imwrite(file_img, dst)
