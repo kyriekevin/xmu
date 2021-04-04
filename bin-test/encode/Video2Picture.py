@@ -2,7 +2,7 @@ import cv2.data
 from cv2 import VideoWriter, VideoWriter_fourcc, imread, resize
 import os
 from PIL import Image
-from QR_code import QR_code
+from encode1 import QR_code
 import sys
 img_root = os.getcwd() #获取当前路径
 def Pic2Video(video_name,set_fps=15):
