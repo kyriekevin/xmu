@@ -1,3 +1,8 @@
+# -*- codeing = utf-8 -*-
+# @Time : 2021/4/7 23:40
+# @Author : Sy
+# @File : decode.py
+# @Software : VSCode
 from detect_decode import detect_decode
 from Video2Picture import Video2Pic
 import os
