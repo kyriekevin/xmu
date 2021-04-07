@@ -39,18 +39,17 @@ def Video2Pic(videopath):
     fps = cap.get(cv2.CAP_PROP_FPS)  # 获取帧率
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))  # 获取宽度
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))  # 获取高度
-    if not cap.isOpened():  # 是否成功打开
-        print("Please check the path.")
-    frame_count = 0
-    cnt=0
-    while 1:
-        suc, frame = cap.read()
-        cnt += 1
-        #cv2.imwrite(imgPath + str(frame_count).zfill(4), frame)
-        cv2.imwrite(imgPath + "%d.jpg" %frame_count, frame)
-        if not suc:
+    isOpened=cap.isOpened()
+    i=0
+    while (isOpened):
+        i=i+1
+        flag,frame=cap.read()
+        fileName = '%03d'%i+".jpg"
+        if flag == True :
+            cv2.imwrite(imgPath+'%03d'%i+".jpg",frame) # 命名 图片 图片质量，此处文件名必须以图片格式结尾命名
+            cv2.waitKey(1)
+        else:
             break
-        cv2.waitKey(1)
     cap.release()
     print("视频转图片结束！")
      

@@ -149,7 +149,7 @@ class detect_decode:
     def __init__(self):
         img_root = os.getcwd() #获取当前路径
         imgPath = img_root+"/output/"  # 保存图片路径
-        filename = "1.png"
+        filename = "001.jpg"
         input_img = cv.imread(imgPath+filename)
         gray_img = cv.cvtColor(input_img, cv.COLOR_BGR2GRAY)  # 将图片通过库转换成灰度图像
         ret, binary_img = cv.threshold(
@@ -166,12 +166,12 @@ class detect_decode:
         print(points)
         # cv.imshow("show",input_img)
         # 仿射变换
-        res = affine_transformation(points)
+        res = self.affine_transformation(points,input_img)
         # print(res)
         # 转换成二进制文件
         # cv.imshow("asd", res)
         pixel = []
-        version, pixel = pixel2binary(res)  # 图片转二进制
+        version, pixel = self.pixel2binary(res)  # 图片转二进制
         print(version)
         # print(pixel)
         # Write(pixel)
