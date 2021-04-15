@@ -78,8 +78,7 @@ def pixel2binary(res):  # 读取图片信息
     if ver1 != ver2 or ver1 != ver3:
         return -1, pixel
     #return ver1, pixel
-    ver1 = "0b" + ver1
-    return int(ver1, 2), pixel
+    return ver1, pixel
 
 
 
@@ -118,58 +117,78 @@ def Write(pixel):
     file.close()
 
 
-def solve(pixel):
+
+def solve(pixel,version):
     n = len(pixel)
-    p = 25
+    p = [1, 1, 0, 0, 1]
     ou = open("out.txt", "w", encoding="utf-8")
     bu = open("vout.txt", "w", encoding="utf-8")
     right, s = "", ""
-    for i in range(0, n - 3, 12):
+    s += version + "\n"
+    for i in range(0, n - 12, 12):
         two = 2048
         sum = 0
         for j in range(12):
+            if(i+j>=len(pixel)):
+                break
             sum = sum + two * pixel[i + j]
-            print(i, j, i + j, pixel[i + j])
+            # print(i, j, i + j, pixel[i + j])
             two = two // 2
-        if (sum % p == 0):
-            right = right + '1'
-        else:
-            right = right + '0'
+        for j in range(8):
+            if pixel[i + j] == 1:
+                for k in range(5):
+                    pixel[i + j + k] = pixel[i + j + k] ^ p[k]
+        flag = True
+        for j in range(12):
+            if pixel[i + j] != 0:
+                right += '0'
+                flag = False
+                break
+        if flag:
+            right += '1'
         sum = sum // 16
         s += chr(sum)
     bu.write(right)
     ou.write(s)
-    bu.close()
-    ou.close()
+
 
 
 if __name__ == "__main__":
-    filename = "1.png"
+    filename = "ttt.jpg"
     input_img = cv.imread(filename)
     gray_img = cv.cvtColor(input_img, cv.COLOR_BGR2GRAY)  # 将图片通过库转换成灰度图像
     ret, binary_img = cv.threshold(gray_img, 127, 255, cv.THRESH_BINARY)  # 将图片转换成黑白二值化
-    # cv.imshow("show2", gray_img)
     contours, hierarchy = cv.findContours(binary_img, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    cv.imshow("as", binary_img)
-    # cv.imwrite("binary_img.png",binary_img)
+    # cv.imshow("As",binary_img)
+    # print(hierarchy)
+    # detect2(hierarchy,binary_img)
+    # # cv.imshow("as", binary_img)
+    # # cv.imwrite("binary_img.png",binary_img)
     ## 函数变换
     points = []
     qrcoder = cv.QRCodeDetector()
     ret, points = qrcoder.detect(binary_img)
-    print(points)
+    print(ret)
+
     # cv.imshow("show",input_img)
     # 仿射变换
-    res = affine_transformation(points)
-    # print(res)
-    # 转换成二进制文件
-    # cv.imshow("asd", res)
-    pixel = []
-    version, pixel = pixel2binary(res);  # 图片转二进制
-    print(version)
+
+    #
+    # res = affine_transformation(points)
+    # # print(res)
+    # # 转换成二进制文件
+    # # cv.imshow("asd", res)
+    # pixel = []
+    # version, pixel = pixel2binary(res);  # 图片转二进制
+    # # print(version)
+    # if(version != -1):
+    #     solve(pixel,version)  # 解码
+    #
+    #
     # print(pixel)
     # Write(pixel)
     # np.savetxt("001.txt",pixel)
-    solve(pixel)#解码
-    #get_env(res)
+
+    # get_env(res)
     cv.waitKey(0)
     cv.destroyAllWindows()
